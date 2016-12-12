@@ -9,7 +9,7 @@ http://adventofcode.com/2016/
 Using python 3.5
 
 ```
-pip install requirements.txt
+pip install -r requirements.txt
 ```
 
 **C/C++**:
