@@ -14,4 +14,4 @@ pip install -r requirements.txt
 
 **C/C++**:
 
-_TODO_
+Each Day's challenge has a Makefile wihtin its directory. To compile, just run `make` in that directory.
