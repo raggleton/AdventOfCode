@@ -76,6 +76,7 @@ int main() {
 
   int POSITION[2] = {0, 0};
   int DIRECTION[2] = {0, 1};
+  bool doDuplicateCheck = true;  // false for Part A, true for Part B
 
   int visitedX[1000*maxSize];
   int visitedY[1000*maxSize];
@@ -96,15 +97,17 @@ int main() {
     updateDirection(DIRECTION, turnDirection);
     for (int s = 0; s < stepSize && !breaker; s++) {
       updatePosition(POSITION, DIRECTION, 1);
-      if (positionAlreadyStored(POSITION, visitedX, visitedY, visitCounter)) {
-        printf("Found duplicate location\n");
-        printf("Scanned %d locations\n", visitCounter+1);
-        breaker = true;
-      } else {
-        visitedX[visitCounter] = POSITION[0];
-        visitedY[visitCounter] = POSITION[1];
-        visitCounter++;
-        // printf("New position: [%d][%d]\n", POSITION[0], POSITION[1]);
+      if (doDuplicateCheck) {
+        if (positionAlreadyStored(POSITION, visitedX, visitedY, visitCounter)) {
+          printf("Found duplicate location\n");
+          printf("Scanned %d locations\n", visitCounter+1);
+          breaker = true;
+        } else {
+          visitedX[visitCounter] = POSITION[0];
+          visitedY[visitCounter] = POSITION[1];
+          visitCounter++;
+          // printf("New position: [%d][%d]\n", POSITION[0], POSITION[1]);
+        }
       }
     }
   }
