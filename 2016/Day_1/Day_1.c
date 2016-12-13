@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include <stdbool.h>
 
 
 void fillRotationMatrix(float angle, float arr[2][2]) {
@@ -45,10 +46,19 @@ int calcVectorDisplacement(int vec[2]) {
   return sum;
 }
 
+bool positionAlreadyStored(int POSITION[2], int * visitedX, int * visitedY, int visitCounter) {
+  for (int i = 0; i <= visitCounter; i++) {
+    if (POSITION[0] == visitedX[i] && POSITION[1] == visitedY[i])
+      return true;
+  }
+  return false;
+}
+
 int main() {
   printf("Running Day 1 exercise (part 1)\n");
 
   char PROBLEM_INPUT[] = "L4, L1, R4, R1, R1, L3, R5, L5, L2, L3, R2, R1, L4, R5, R4, L2, R1, R3, L5, R1, L3, L2, R5, L4, L5, R1, R2, L1, R5, L3, R2, R2, L1, R5, R2, L1, L1, R2, L1, R1, L2, L2, R4, R3, R2, L3, L188, L3, R2, R54, R1, R1, L2, L4, L3, L2, R3, L1, L1, R3, R5, L1, R5, L1, L1, R2, R4, R4, L5, L4, L1, R2, R4, R5, L2, L3, R5, L5, R1, R5, L2, R4, L2, L1, R4, R3, R4, L4, R3, L4, R78, R2, L3, R188, R2, R3, L2, R2, R3, R1, R5, R1, L1, L1, R4, R2, R1, R5, L1, R4, L4, R2, R5, L2, L5, R4, L3, L2, R1, R1, L5, L4, R1, L5, L1, L5, L1, L4, L3, L5, R4, R5, R2, L5, R5, R5, R4, R2, L1, L2, R3, R5, R5, R5, L2, L1, R4, R3, R1, L4, L2, L3, R2, L3, L5, L2, L2, L1, L2, R5, L2, L2, L3, L1, R1, L4, R2, L4, R3, R5, R3, R4, R1, R5, L3, L5, L5, L3, L2, L1, R3, L4, R3, R2, L1, R3, R1, L2, R4, L3, L3, L3, L1, L2";
+  // char PROBLEM_INPUT[] = "R8, R4, R4, R8";
 
   size_t maxSize = 500;
   char * split[maxSize];
@@ -67,23 +77,36 @@ int main() {
   int POSITION[2] = {0, 0};
   int DIRECTION[2] = {0, 1};
 
-  for (int i = 0; i < maxSize; i++) {
+  int visitedX[1000*maxSize];
+  int visitedY[1000*maxSize];
+  int visitCounter = 0;
+
+  bool breaker = false;
+  for (int i = 0; i < maxSize && !breaker; i++) {
     char * stepStr = split[i];
     if (stepStr == NULL)
       break;
 
-    // printf(">>> Item #%d is %s\n", i, stepStr);
-    // printf("Starting position: [%d][%d]\n", POSITION[0], POSITION[1]);
+    printf(">>> Item #%d is %s\n", i, stepStr);
+    printf("Starting position: [%d][%d]\n", POSITION[0], POSITION[1]);
     char turnDirection = stepStr[0];
     stepStr++;
     int stepSize = atoi(stepStr);
 
-    // printf("Setting turnDirection %c\n", turnDirection);
-    // printf("Setting length %d\n", stepSize);
     updateDirection(DIRECTION, turnDirection);
-    // printf("New direction: [%d][%d]\n", DIRECTION[0], DIRECTION[1]);
-    updatePosition(POSITION, DIRECTION, stepSize);
-    // printf("New position: [%d][%d]\n", POSITION[0], POSITION[1]);
+    for (int s = 0; s < stepSize && !breaker; s++) {
+      updatePosition(POSITION, DIRECTION, 1);
+      if (positionAlreadyStored(POSITION, visitedX, visitedY, visitCounter)) {
+        printf("Found duplicate location\n");
+        printf("Scanned %d locations\n", visitCounter+1);
+        breaker = true;
+      } else {
+        visitedX[visitCounter] = POSITION[0];
+        visitedY[visitCounter] = POSITION[1];
+        visitCounter++;
+        // printf("New position: [%d][%d]\n", POSITION[0], POSITION[1]);
+      }
+    }
   }
 
   printf("Final position: [%d][%d]\n", POSITION[0], POSITION[1]);
