@@ -13,6 +13,7 @@ int compareInts(const void * a, const void * b){
 bool isTriangle(int a, int b, int c) {
   int sides[3] = {a, b, c};
   qsort(sides, 3, sizeof(int), compareInts);
+  printf("[ %d, %d, %d]\n", sides[0], sides[1], sides[2]);
   return sides[2] < sides[0] + sides[1];
 }
 
@@ -36,8 +37,21 @@ int main() {
   fclose(fp);
 
   int numGood = 0;
-  for (int i = 0; i < counter; i++) {
-    if (isTriangle(col0[i], col1[i], col2[i])) {
+  // for (int i = 0; i < counter; i++) {  // For Part A
+  for (int i = 0; i < counter-2; i+=3) {  // For Part B
+    // For Part A
+    // if (isTriangle(col0[i], col1[i], col2[i])) {
+    //   numGood++;
+    // }
+
+    // For Part B
+    if (isTriangle(col0[i], col0[i+1], col0[i+2])) {
+      numGood++;
+    }
+    if (isTriangle(col1[i], col1[i+1], col1[i+2])) {
+      numGood++;
+    }
+    if (isTriangle(col2[i], col2[i+1], col2[i+2])) {
       numGood++;
     }
   }
